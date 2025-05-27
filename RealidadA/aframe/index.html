@@ -1,0 +1,172 @@
+<!DOCTYPE html>  
+<html lang="es">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />  
+  <title>REALIDAD AUMENTADA</title>  
+
+  <!-- Librerías -->
+  <script src="libreria/aframe.min.js"></script>  
+  <script src="libreria/aframe-ar.js"></script>  
+  <script src="libreria/aframe-environment-component.min.js"></script>  
+  <script src="libreria/aframe-extras.min.js"></script>  
+
+  <!-- Estilos -->
+  <style>
+    .ui-buttons {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      z-index: 999;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: 2px solid white;
+    }
+    .ui-buttons button {
+      padding: 10px 15px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 5px;
+      border: 2px solid #ffffff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: white;
+    }
+
+    .rotar-btn {
+      background-color: #007bff;
+      border-color: #0056b3;
+    }
+    .rotar-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .mostrar-btn {
+      background-color: #28a745;
+      border-color: #1e7e34;
+    }
+    .mostrar-btn:hover {
+      background-color: #1e7e34;
+    }
+
+    .entorno-btn {
+      background-color: #ffc107;
+      border-color: #e0a800;
+      color: #000;
+    }
+    .entorno-btn:hover {
+      background-color: #e0a800;
+    }
+
+    .audio-btn {
+      background-color: #dc3545;
+      border-color: #bd2130;
+    }
+    .audio-btn:hover {
+      background-color: #bd2130;
+    }
+
+    .escalar-btn {
+      background-color: #6610f2;
+      border-color: #520dc2;
+    }
+    .escalar-btn:hover {
+      background-color: #520dc2;
+    }
+  </style>
+</head>  
+<body style="margin: 0; overflow: hidden;">  
+
+  <!-- Botones -->
+  <div class="ui-buttons">
+    <button class="rotar-btn" onclick="rotarModelo()">Rotar</button>
+    <button class="mostrar-btn" onclick="toggleModelo()">Mostrar/Ocultar</button>
+    <button class="entorno-btn" onclick="toggleEntorno()">Entorno</button>
+    <button class="audio-btn" onclick="arrancarAudio()">Arrancar</button>
+    <button class="escalar-btn" onclick="escalarModelo()">Escalar</button>
+  </div>
+
+  <!-- Audio -->
+  <audio id="audioArrancar" src="Assets/music.wav"></audio>
+
+  <!-- Escena AR -->
+  <a-scene   
+    embedded   
+    vr-mode-ui="enabled: false"   
+    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"  
+    renderer="colorManagement: true; exposure: 1.2;"
+  >   
+    <a-entity light="type: ambient; color: #ffffff; intensity: 1"></a-entity>  
+    <a-entity light="type: directional; color: #ffffff; intensity: 0.6" position="1 2 1"></a-entity>  
+
+    <a-assets>  
+      <a-asset-item id="modelo" src="Assets/carro.glb"></a-asset-item>  
+    </a-assets>  
+
+    <a-marker type="pattern" url="Marcador/pattern-RELOJ.patt">  
+      <a-entity   
+        id="carro"  
+        gltf-model="#modelo"   
+        scale="6 6 6"   
+        position="0 0 0"  
+        rotation="-90 0 0"  
+        animation-mixer  
+      ></a-entity>  
+    </a-marker>  
+
+    <!-- Entorno oculto por defecto -->
+    <a-entity id="entorno" environment="preset: forest" visible="false"></a-entity>
+
+    <a-entity camera></a-entity>  
+  </a-scene>  
+
+  <script>
+    let angulo = 0;
+    let visible = true;
+    let entornoActivo = false;
+
+    function rotarModelo() {
+      const carro = document.querySelector('#carro');
+      angulo += 45;
+      carro.setAttribute("rotation", `-90 ${angulo} 0`);
+    }
+
+    function toggleModelo() {
+      const carro = document.querySelector('#carro');
+      visible = !visible;
+      carro.setAttribute("visible", visible);
+    }
+
+    function toggleEntorno() {
+      const entorno = document.querySelector('#entorno');
+      entornoActivo = !entornoActivo;
+      entorno.setAttribute("visible", entornoActivo);
+    }
+
+    function arrancarAudio() {
+      const audio = document.getElementById('audioArrancar');
+      audio.play();
+    }
+
+    let escalas = [
+      { x: 4, y: 4, z: 4 },
+      { x: 6, y: 6, z: 6 },
+      { x: 8, y: 8, z: 8 }
+    ];
+    let escalaIndex = 1;
+
+    function escalarModelo() {
+      const carro = document.querySelector('#carro');
+      escalaIndex = (escalaIndex + 1) % escalas.length;
+      const escala = escalas[escalaIndex];
+      carro.setAttribute("scale", `${escala.x} ${escala.y} ${escala.z}`);
+    }
+  </script>
+</body>  
+</html>
