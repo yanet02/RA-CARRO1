@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />  
   <title>REALIDAD AUMENTADA</title>  
 
-  <!-- Librerías -->
   <script src="libreria/aframe.min.js"></script>  
   <script src="libreria/aframe-ar.js"></script>  
   <script src="libreria/aframe-environment-component.min.js"></script>  
   <script src="libreria/aframe-extras.min.js"></script>  
 
-  <!-- Estilos -->
   <style>
     .ui-buttons {
       position: fixed;
@@ -83,7 +81,6 @@
 </head>  
 <body style="margin: 0; overflow: hidden;">  
 
-  <!-- Botones -->
   <div class="ui-buttons">
     <button class="rotar-btn" onclick="rotarModelo()">Rotar</button>
     <button class="mostrar-btn" onclick="toggleModelo()">Mostrar/Ocultar</button>
@@ -92,10 +89,9 @@
     <button class="escalar-btn" onclick="escalarModelo()">Escalar</button>
   </div>
 
-  <!-- Audio -->
+
   <audio id="audioArrancar" src="Assets/music.wav"></audio>
 
-  <!-- Escena AR -->
   <a-scene   
     embedded   
     vr-mode-ui="enabled: false"   
@@ -120,7 +116,6 @@
       ></a-entity>  
     </a-marker>  
 
-    <!-- Entorno oculto por defecto -->
     <a-entity id="entorno" environment="preset: forest" visible="false"></a-entity>
 
     <a-entity camera></a-entity>  
